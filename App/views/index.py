@@ -126,7 +126,7 @@ def settings():
 #     return render_template('settings.html')
 
 
-@index_views.route('/test', methods = ['GET'])
+@index_views.route('/home', methods = ['GET'])
 @login_required
 def test():
     file = open('App/exercises.json')
