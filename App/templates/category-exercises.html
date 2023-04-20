@@ -1,0 +1,331 @@
+{% extends "layout.html" %}
+{% block title %}JustGym - signup{% endblock %}
+{% block page %}{% endblock %}
+
+{{ super() }}
+
+{% block content %}
+
+<style>
+* {
+  font-family: 'Poppins', sans-serif;
+  /* color: white; */
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+html {
+  width: 100% !important;
+  overflow-y: scroll !important;
+}
+
+body {
+    height: 100% !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.content {
+    width: 100% !important;
+    height: 100% !important;
+    background-color: black; 
+    /* background-size: stretch; */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    /* border: 2px solid pink; */
+}
+
+.gym {
+    color: #FF4857;
+    font-style: italic;
+    margin-left: -5px;
+    /* padding-left: 0; */
+}
+
+#exercise-content {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-around;
+    align-items: flex-end;
+    overflow-x: visible;
+}
+
+#exercise-content .card-body {
+    color: black;
+}
+
+.list-exercises-content h3 {
+    color: white; 
+    background-color: black; 
+    z-index: 1; 
+    margin: 0; 
+    padding: 20px;
+    /* position: sticky; 
+    top: -1px; */
+}
+
+#exercise-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 60%;
+}
+
+#selected-exercise li, #selected-exercise .card-title, .modal-title {
+    color: black;
+}
+
+.exercise-card {
+    margin: 5px 5%;
+}
+
+/* .exercise-card .active {
+    text-decoration: none;
+} */
+
+.exercise-card:hover, .exercise-card .active {
+    background: #FF4857;
+    color: white; /* */
+    cursor: pointer;
+}
+
+.exercise-card .exercise-card-body:hover, .exercise-card .active .exercise-card-body {
+    color: white !important;
+}
+
+#exampleModal2 {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    margin-left: -200px;
+    /* border: 2px solid blue; */
+    width: 400px;
+}
+/* .exercise-card-modal-dialog {
+
+} */
+
+/* .exercise-card-body {
+    min-width: 200px;
+    max-width: 500px;
+} */
+.exercise-card {
+    /* min-width: 200px;
+    max-width: 500px; */
+    width: 40%;
+}
+
+#selected-exercise {
+    /* border: 2px solid lavender !important; */
+    position: -webkit-sticky;
+    position: sticky;
+    padding-top: 10px;
+    top: 0;
+    padding-left: 5%;
+}
+/* .selected-exercise-card1 img {
+    width: 100% !important;
+} */
+.selected-exercise-card1 {
+    padding: 20px;
+}
+
+.selected-exercise-card2 {
+    display: none !important;
+    min-width: 300px;
+    padding: 0 5%;
+    /* border: 2px solid blue !important; */
+}
+
+.selected-exercise-card2-row {
+    flex-wrap: nowrap !important;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+@media only screen and (max-width: 1210px) { /* 1080px */
+    #selected-exercise { padding-left: 0; }
+
+    .selected-exercise-card1 { display: none !important; }
+
+    .selected-exercise-card2 { display: block !important; }
+
+    .selected-exercise-card2-image {
+        /* border: 2px solid green; */
+        padding: 0 !important;
+    }
+
+    /* .selected-exercise-card2 img { border: 2px solid pink; } */
+
+    .selected-exercise-card2-body {
+        /* border: 2px solid blueviolet; */
+        padding: 0 !important;
+    }
+
+    /* .selected-exercise-card2-body .card-body{ border: 2px solid yellow; } */
+
+    #test {
+        /* width: 100vw !important; */
+        margin-top: -10px !important;
+        padding-top: 10px;
+        background: black !important;
+    }
+
+    #exercise-list {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 770px) {
+    .selected-exercise-card2-body .card-title{
+        font-size: 16px;
+    }
+
+    .selected-exercise-card2-body .card-body li{
+        font-size: 12px;
+        padding: 8px;
+        /* margin: 5px; */
+    }
+}
+</style>
+
+
+<!-- Nav should be in layout.html once its common to all webpages using the layout.html file, no? -->
+<nav class="navbar" style="background-color: #42414A;">
+  <div class="container-fluid">
+    <!-- <a class="navbar-brand" href="#"><img src="/static/img/logo.png"></a> -->
+    <a class="navbar-brand" href="#">
+      <span class="logo just">Just</span>
+      <span class="logo gym">Gym</span>
+    </a>
+  </div>
+</nav>
+
+    <div class="content list-exercises-content">
+      <h3>Cardio > Exercises</h3>
+
+      <div id="exercise-content">
+        <div id="exercise-list" class="exercises-info">
+          {% for ex in category_exercises %}
+              <div class="card exercise-card">
+                <a href="/categories/{{category}}/{{ex.get_json()['id']}}" id="ex-{{ex.get_json()['id']}}" class="{% if ex.get_json()['id'] == id%}active{%endif%} "> 
+                  <div class="card-body exercise-card-body">
+                    {{ex.get_json()['name']}}
+                  </div>
+                </a>
+              </div>
+          {% endfor %}
+        </div>
+        
+
+        <div id="selected-exercise" class="exercises-info">
+          <div class="card selected-exercise-card1"> <!-- style="width: 18rem;" -->
+            <img src="{{category_exercises[index].get_json()['gifUrl']}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{category_exercises[index].get_json()['name']}}</h5>
+              <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Category: {{category_exercises[index].get_json()['bodyPart']}}</li>
+              <li class="list-group-item">Target: {{category_exercises[index].get_json()['target']}}</li>
+              <li class="list-group-item">Equipment: {{category_exercises[index].get_json()['equipment']}}</li>
+            </ul>
+            <div class="card-body">
+              <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#exampleModal2">Add to Routine</a>
+              <!-- <a href="#" class="card-link">Another link</a> -->
+            </div>
+          </div>
+
+
+          <div id="test" class="col d-flex justify-content-center">
+            <div class="card mb-3 selected-exercise-card2" style="max-width: 540px;">
+              <div class="row g-0 selected-exercise-card2-row">
+                <div class="col-md-4 selected-exercise-card2-image">
+                  <img src="{{category_exercises[index].get_json()['gifUrl']}}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8 selected-exercise-card2-body">
+                  <div class="card-body">
+                    <h5 class="card-title">{{category_exercises[index].get_json()['name']}}</h5>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">Category: {{category_exercises[index].get_json()['bodyPart']}}</li>
+                      <li class="list-group-item">Target: {{category_exercises[index].get_json()['target']}}</li>
+                      <li class="list-group-item">Equipment: {{category_exercises[index].get_json()['equipment']}}</li>
+                      <li class="list-group-item"><a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#exampleModal2">Add to Routine</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Scrollable modal -->
+      <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div id="exampleModal2" class="modal-dialog exercise-card-modal-dialog">
+          <div class="modal-content">
+            <form id="routine-selection-form">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add exercise to workout routine</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <label style="color: black" class="form-check-label" for="routine-selection-form">Select workout routines</label>
+              
+                <div id="routine-selection" style="padding: 10px; overflow-y: scroll; max-height: 100px;">
+
+                  <!-- note: may need to change to radio buttons to allow to add to 1 routine -->
+                  <!-- because add exercise to workouut function will only be called once -->
+                  {% for workout in workouts %}
+                  
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="workout-{{workout['workout_id']}}" value="workout-{{workout['workout_id']}}" id="workout-{{workout['workout_id']}}">
+                      <label style="color: black" class="form-check-label" for="workout-{{workout['workout_id']}}">{{workout['workoutName']}}</label>
+                    </div>
+                  {% endfor %}
+                </div>
+
+                <hr>
+                <div class="row">
+                  <div class="col form-check mb-3">
+                    <label style="color: black" class="form-label" for="sets">Sets</label>
+                    <input class="form-control" type="number" name="sets" id="sets">
+                  </div>
+                  <div class="col form-check mb-3">
+                    <label style="color: black" class="form-label" for="reps">Reps</label>
+                    <input class="form-control" type="number" name="reps" id="reps">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-group" style="width: 260px">
+                    <label style="color: black" class="form-label" for="reps">Duration</label>
+                    <input type="number" class="form-control" aria-label="duration" aria-describedby="basic-addon2">
+                    <span class="input-group-text" id="basic-addon2">seconds</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Save changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+{% endblock %}
